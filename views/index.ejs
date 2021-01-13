@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>My mini blog</title>
-  </head>
-  <body>
-    <h1>welcome to my mini blog!</h1>
+<%- include('partials/header') %>
+<h1>Welcome to my mini blog!</h1>
+<p>In this simple web app, you can explore posts, create posts, make comments, star posts and comments,
+  and follow favourite authors! Let's login to get started!</p>
+<a class='btn btn-primary' href='/login'>Login</a>
+<p>Don't have an account yet? Register now!</p>
+<a class='btn btn-info' href='/register'>Register</a>
 
-  </body>
-</html>
+<%- include('partials/footer') %>

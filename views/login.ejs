@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+<h1>Login</h1>
+<form class="" action="/login" method="post">
+  <label for="">Username: </label>
+  <input class='form-control' type="text" name="username" required>
+  <label for="">Password</label>
+  <input class='form-control' type="password" name="password" required>
+  <button class='btn btn-primary' type="submit">Log in</button>
+</form>
+<p>Do not have an account yet? Register now!</p>
+<a class='btn btn-primary' href="/register">Register</a>
+<%- include('partials/footer') %>
