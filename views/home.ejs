@@ -1,4 +1,11 @@
 <%- include('partials/header') %>
 <h1>Welcome, <%= user.username %></h1>
 <a class='btn btn-primary' href="/logout">Log out</a>
+<% user.posts.forEach(post=>{ %>
+  <p><%= post.title %></p>
+  <% if(post.content.length>100){ %>
+    <p><%= post.content.slice(0,100) %>......</p>
+  <% }else{ %>
+    <p><%= post.content %></p>
+<% }}) %>
 <%- include('partials/footer') %>

@@ -54,8 +54,8 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(passportLocalMongoose);
 
 const User=mongoose.model('User',userSchema);
-const Post=mongoose.model('Post',userSchema);
-const Comment=mongoose.model('Comment',userSchema);
+const Post=mongoose.model('Post',postSchema);
+const Comment=mongoose.model('Comment',commentSchema);
 passport.use(User.createStrategy());
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -68,7 +68,7 @@ app.get('/',function(req,res){
 });
 app.route('/register')
 .get(function(req,res){
-  res.render('register',{errorMsg:req.flash('errorMsg')});
+  res.render('register',{errorMsg:req.flash('errorMsg'),username:req.flash('username')});
 })
 .post(async function(req,res){
   const username=req.body.username;
@@ -87,6 +87,7 @@ app.route('/register')
   }
   if (messages.length!==0){
     req.flash('errorMsg',messages)
+    req.flash('username',username)
     res.redirect('/register');
     return;
   }
@@ -100,13 +101,14 @@ app.route('/register')
 
 app.route('/login')
 .get(function(req,res){
-  res.render('login',{errorMsg:req.flash('errorMsg'),successMsg:req.flash('successMsg')});
+  res.render('login',{errorMsg:req.flash('errorMsg'),successMsg:req.flash('successMsg'),username:req.flash('username')});
 })
 .post(function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
     if (!user) {
       req.flash('errorMsg',['username or password is incorrect'])
+      req.flash('username',req.body.username);
       return res.redirect('/login');
      }
     req.logIn(user, function(err) {
@@ -129,6 +131,46 @@ app.get('/logout',function(req,res){
   req.logout();
   req.flash('successMsg','You have successfully logged out!')
   res.redirect('/login');
+})
+app.get('/create',function(req,res){
+  if (req.isAuthenticated()){
+    res.render('create',{errorMsg:req.flash('errorMsg'),title:req.flash('title'),content:req.flash('content')});
+  }else{
+    req.flash('errorMsg',['Please log in to create a post!'])
+    res.redirect('/login')
+  }
+})
+app.post('/posts',async function(req,res){
+  if (!req.isAuthenticated()){
+    req.flash('errorMsg',['Please log in to create a post!'])
+    res.redirect('/login');
+    return
+  }
+  const title=req.body.title;
+  const content=req.body.content;
+  const errorMsg=[];
+  if (title.length>50){
+    errorMsg.push('Title should be less than 50 characters!')
+  }
+  if (content.length<10){
+    errorMsg.push('Content should be more than 10 characters!')
+  }
+  if (errorMsg.length>0){
+    req.flash('errorMsg',errorMsg);
+    req.flash('content',content);
+    req.flash('title',title)
+    return res.redirect('/create')
+  }
+  const user=await User.findById(req.user._id).exec();
+  const newPost=new Post({
+    title:title,
+    content:content,
+    author:user.username
+  });
+  newPost.save();
+  user.posts.push(newPost);
+  user.save();
+  res.redirect('/home');
 })
 app.listen(process.env.PORT,function(){
   console.log('Listening on port '+process.env.PORT)
