@@ -1,0 +1,16 @@
+<%- include('partials/header') %>
+<h1><%= post.title %></h1>
+<p>Author: <%= post.author %></p>
+<p><%= post.content %></p>
+<h3>Comments</h3>
+<form class="" action="/posts/<%= post._id %>/comments" method="post">
+  <textarea class='form-control' name="content" rows="8" cols="80" placeholder="Please insert your comment here" required><%= commentValue %></textarea>
+  <button type="submit" class='btn btn-primary'>Submit</button>
+</form>
+<% post.comments.forEach(comment=>{ %>
+  <p><%= comment.content %></p>
+  <p>Username: <%= comment.author %></p>
+  <p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
+  <p>Likes count: <%= comment.likesCount %></p>
+<% }) %>
+<%- include('partials/footer') %>

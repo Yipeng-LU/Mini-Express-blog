@@ -28,8 +28,8 @@ mongoose.set('useCreateIndex', true);
 const commentSchema=new mongoose.Schema({
   content:String,
   author:String,
-  postName:String,
-  postId:mongoose.Schema.Types.ObjectId,
+  postTitle:String,
+  postId:String,
   publishDate:{ type: Date, default: Date.now },
   likesCount:{ type: Number, default: 0 },
 })
@@ -140,7 +140,12 @@ app.get('/create',function(req,res){
     res.redirect('/login')
   }
 })
-app.post('/posts',async function(req,res){
+app.route('/posts')
+.get(async function(req,res){
+  const posts=await Post.find({});
+  res.render('posts',{posts:posts,errorMsg:req.flash('errorMsg')})
+})
+.post(async function(req,res){
   if (!req.isAuthenticated()){
     req.flash('errorMsg',['Please log in to create a post!'])
     res.redirect('/login');
@@ -171,6 +176,53 @@ app.post('/posts',async function(req,res){
   user.posts.push(newPost);
   user.save();
   res.redirect('/home');
+})
+app.get('/posts/:id',async function(req,res){
+  const id=req.params.id;
+  let post;
+  try{
+    post=await Post.findById(id);
+  }catch{
+    req.flash('errorMsg','Cannot find the post!')
+    return res.redirect('/posts')
+  }
+  res.render('post',{post:post,successMsg:req.flash('successMsg'),errorMsg:req.flash('errorMsg'),commentValue:req.flash('commentValue')});
+})
+app.get('/users/:username',async function(req,res){
+  const username=req.params.username;
+  const user=await User.findOne({username:username});
+  if (!user){
+    req.flash('errorMsg','Cannot find the user!')
+    return res.redirect('/posts');
+  }
+  res.render('user',{user:user});
+})
+app.post('/posts/:id/comments',async function(req,res){
+  if (!req.isAuthenticated()){
+    req.flash('errorMsg',['Please log in to create a comment!']);
+    return res.redirect('/login');
+  }
+  const content=req.body.content;
+  const id=req.params.id;
+  if (content.length<10){
+    req.flash('errorMsg',['Comment should be at least 10 characters long!']);
+    req.flash('commentValue',content)
+    return res.redirect('/posts/'+id);
+  }
+  const post=await Post.findById(id);
+  const user=await User.findById(req.user._id);
+  const comment=new Comment({
+    content:content,
+    author:User.username,
+    postTitle:post.title,
+    postId:id,
+  });
+  post.comments.push(comment);
+  post.save();
+  user.comments.push(comment);
+  user.save();
+  req.flash('successMsg','You have successfully created a comment!')
+  res.redirect('/posts/'+id);
 })
 app.listen(process.env.PORT,function(){
   console.log('Listening on port '+process.env.PORT)
