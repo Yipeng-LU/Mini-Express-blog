@@ -9,6 +9,7 @@ const passport=require('passport');
 const passportLocalMongoose=require('passport-local-mongoose');
 const app=express();
 const flash=require('connect-flash');
+const axios = require('axios');
 
 app.set('view engine','ejs');
 app.use(flash());
@@ -31,14 +32,16 @@ const commentSchema=new mongoose.Schema({
   postTitle:String,
   postId:String,
   publishDate:{ type: Date, default: Date.now },
-  likesCount:{ type: Number, default: 0 },
 })
 const postSchema=new mongoose.Schema({
   title:String,
   content:String,
   author:String,
+  city:String,
+  weather:String,
+  temperature:Number,
   publishDate:{ type: Date, default: Date.now },
-  likesCount:{ type: Number, default: 0 },
+  starCount:{ type: Number, default: 0 },
   comments:[commentSchema]
 })
 const userSchema = new mongoose.Schema({
@@ -47,9 +50,9 @@ const userSchema = new mongoose.Schema({
   posts:[postSchema],
   comments:[commentSchema],
   favouritePosts:[postSchema],
-  favouriteComments:[commentSchema],
+  favouritePostIds:[String],
   followings:[String],
-  followerCounts:{ type: Number, default: 0 }
+  followerCount:{ type: Number, default: 0 }
 });
 userSchema.plugin(passportLocalMongoose);
 
@@ -94,7 +97,7 @@ app.route('/register')
   User.register({username:username},password,function(err,user){
     passport.authenticate('local')(req,res,function(){
       req.flash('successMsg','You have successfully registered')
-      res.redirect('/dashboard')
+      res.redirect('/home')
     })
   })
 });
@@ -134,7 +137,7 @@ app.get('/logout',function(req,res){
 })
 app.get('/create',function(req,res){
   if (req.isAuthenticated()){
-    res.render('create',{errorMsg:req.flash('errorMsg'),title:req.flash('title'),content:req.flash('content')});
+    res.render('create',{errorMsg:req.flash('errorMsg'),title:req.flash('title'),content:req.flash('content'),city:req.flash('city')});
   }else{
     req.flash('errorMsg',['Please log in to create a post!'])
     res.redirect('/login')
@@ -142,17 +145,18 @@ app.get('/create',function(req,res){
 })
 app.route('/posts')
 .get(async function(req,res){
-  const posts=await Post.find({});
+  const posts=await Post.find({}).sort({ starCount : 'desc'}).exec();;
   res.render('posts',{posts:posts,errorMsg:req.flash('errorMsg')})
 })
 .post(async function(req,res){
   if (!req.isAuthenticated()){
     req.flash('errorMsg',['Please log in to create a post!'])
-    res.redirect('/login');
-    return
+    return res.redirect('/login');
   }
   const title=req.body.title;
   const content=req.body.content;
+  const city=req.body.city;
+  const appid=process.env.APPID;
   const errorMsg=[];
   if (title.length>50){
     errorMsg.push('Title should be less than 50 characters!')
@@ -160,17 +164,32 @@ app.route('/posts')
   if (content.length<10){
     errorMsg.push('Content should be more than 10 characters!')
   }
+  const url=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${appid}&units=metric`;
+  let temperature;
+  let weather;
+  try{
+    const response = await axios.get(url, { json: true });
+    const weatherData=response.data;
+    temperature=weatherData.main.temp;
+    weather=weatherData.weather[0].description;
+  }catch{
+    errorMsg.push('City name is invalid or weather api quota is exceeded!')
+  }
   if (errorMsg.length>0){
     req.flash('errorMsg',errorMsg);
     req.flash('content',content);
-    req.flash('title',title)
+    req.flash('title',title);
+    req.flash('city',city)
     return res.redirect('/create')
   }
   const user=await User.findById(req.user._id).exec();
   const newPost=new Post({
     title:title,
     content:content,
-    author:user.username
+    author:user.username,
+    city:city,
+    temperature:temperature,
+    weather:weather
   });
   newPost.save();
   user.posts.push(newPost);
@@ -185,8 +204,13 @@ app.get('/posts/:id',async function(req,res){
   }catch{
     req.flash('errorMsg','Cannot find the post!')
     return res.redirect('/posts')
+  };
+  let starStatus=false;
+  if (req.isAuthenticated()){
+    const user=await User.findById(req.user._id);
+    starStatus=user.favouritePostIds.includes(id);
   }
-  res.render('post',{post:post,successMsg:req.flash('successMsg'),errorMsg:req.flash('errorMsg'),commentValue:req.flash('commentValue')});
+  res.render('post',{starStatus:starStatus,post:post,successMsg:req.flash('successMsg'),errorMsg:req.flash('errorMsg'),commentValue:req.flash('commentValue')});
 })
 app.get('/users/:username',async function(req,res){
   const username=req.params.username;
@@ -195,7 +219,14 @@ app.get('/users/:username',async function(req,res){
     req.flash('errorMsg','Cannot find the user!')
     return res.redirect('/posts');
   }
-  res.render('user',{user:user});
+  let followStatus=false;
+  if (req.isAuthenticated()){
+    const myself=await User.findById(req.user._id);
+    if (myself.followings.includes(username)){
+      followStatus=true;
+    }
+  }
+  res.render('user',{followStatus:followStatus,user:user,successMsg:req.flash('successMsg')});
 })
 app.post('/posts/:id/comments',async function(req,res){
   if (!req.isAuthenticated()){
@@ -213,7 +244,7 @@ app.post('/posts/:id/comments',async function(req,res){
   const user=await User.findById(req.user._id);
   const comment=new Comment({
     content:content,
-    author:User.username,
+    author:user.username,
     postTitle:post.title,
     postId:id,
   });
@@ -223,6 +254,54 @@ app.post('/posts/:id/comments',async function(req,res){
   user.save();
   req.flash('successMsg','You have successfully created a comment!')
   res.redirect('/posts/'+id);
+});
+app.post('/posts/:id/star',async function(req,res){
+  if (!req.isAuthenticated()){
+    req.flash('errorMsg',['Please log in to star a post!']);
+    return res.redirect('/login');
+  };
+  const id=req.params.id;
+  const post=await Post.findById(id);
+  const user=await User.findById(req.user._id);
+  if (user.favouritePostIds.includes(id)){
+    post.starCount-=1;
+    user.favouritePostIds=user.favouritePostIds.filter(i=>i!==id);
+    user.favouritePosts=user.favouritePosts.filter(p=>p._id!=id);
+    req.flash('successMsg','You have successfully unstared the post!');
+  }else{
+    post.starCount+=1;
+    user.favouritePostIds.push(id);
+    user.favouritePosts.push(post)
+    req.flash('successMsg','You have successfully stared the post!')
+  }
+  user.save();
+  post.save();
+  res.redirect('/posts/'+id);
+})
+app.get('/users',async function(req,res){
+  const users=await User.find({}).sort({ followerCount : 'desc'}).exec();
+  res.render('users',{users:users})
+})
+app.post('/users/:username/follow',async function(req,res){
+  if (!req.isAuthenticated()){
+    req.flash('errorMsg',['Please log in to follow a user!']);
+    return res.redirect('/login');
+  };
+  const username=req.params.username;
+  const user=await User.findOne({username:username});
+  const myself=await User.findById(req.user._id);
+  if (myself.followings.includes(username)){
+    myself.followings=myself.followings.filter(f=>f!==username);
+    user.followerCount-=1;
+    req.flash('successMsg','You have successfully unfollowed this user');
+  }else{
+    myself.followings.push(username);
+    user.followerCount+=1;
+    req.flash('successMsg','You have successfully followed this user');
+  }
+  myself.save();
+  user.save();
+  res.redirect('/users/'+username)
 })
 app.listen(process.env.PORT,function(){
   console.log('Listening on port '+process.env.PORT)

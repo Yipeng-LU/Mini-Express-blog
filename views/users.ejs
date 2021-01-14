@@ -1,0 +1,8 @@
+<%- include('partials/header') %>
+<h1>All users</h1>
+<% users.forEach(user=>{ %>
+  <p>Username: <%= user.username %></p>
+  <p>Follower count: <%= user.followerCount %></p>
+  <a href="/users/<%= user.username %>" class='btn btn-primary'>View this user</a>
+<% }) %>
+<%- include('partials/footer') %>

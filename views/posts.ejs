@@ -3,6 +3,8 @@
 <% posts.forEach(post=>{ %>
   <p>Title: <%= post.title %></p>
   <p>Author: <%= post.author %></p>
+  <p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
+  <p>Star count: <%= post.starCount %></p>
   <a class='btn btn-primary' href='/users/<%= post.author %>'>View the author</a>
   <% if(post.content.length>100){ %>
     <p><%= post.content.slice(0,100) %>......</p>

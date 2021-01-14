@@ -1,13 +1,31 @@
 <%- include('partials/header') %>
 <%- include('partials/footer') %>
 <h1><%= user.username %>'s home page</h1>
+<form class="" action='/users/<%= user.username %>/follow' method="post">
+  <button type="submit" class='btn btn-primary'>
+    <% if(!followStatus){ %>
+      follow this user
+    <% }else{ %>
+      unfollow this user
+    <% } %>
+  </button>
+</form>
+<p>Follower count: <%= user.followerCount %></p>
 <h3><%= user.username %>'s posts</h3>
 <% user.posts.forEach(post=>{ %>
   <p>Title: <%= post.title %></p>
+  <p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
   <% if(post.content.length>100){ %>
     <p><%= post.content.slice(0,100) %>......</p>
   <% }else{ %>
     <p><%= post.content %></p>
   <% } %>
   <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
+<% }) %>
+<h3><%= user.username %>'s comments</h3>
+<% user.comments.forEach(comment=>{ %>
+  <p><%= comment.content %></p>
+  <p>Post title: <%= comment.postTitle %></p>
+  <p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
+  <a href="/posts/<%= comment.postId %>" class='btn btn-primary'>Go to the post</a>
 <% }) %>

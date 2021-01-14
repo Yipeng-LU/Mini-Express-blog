@@ -4,11 +4,36 @@
 <h3>My posts</h3>
 <% user.posts.forEach(post=>{ %>
   <p>Title: <%= post.title %></p>
+  <p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
   <% if(post.content.length>100){ %>
     <p><%= post.content.slice(0,100) %>......</p>
   <% }else{ %>
     <p><%= post.content %></p>
   <% } %>
   <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
+<% }) %>
+<h3>My comments</h3>
+<% user.comments.forEach(comment=>{ %>
+  <p><%= comment.content %></p>
+  <p>Post title: <%= comment.postTitle %></p>
+  <p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
+  <a href="/posts/<%= comment.postId %>" class='btn btn-primary'>Go to the post</a>
+<% }) %>
+<h3>My stared posts</h3>
+<% user.favouritePosts.forEach(post=>{ %>
+  <p>Title: <%= post.title %></p>
+  <p>Author: <%= post.author %></p>
+  <p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
+  <% if(post.content.length>100){ %>
+    <p><%= post.content.slice(0,100) %>......</p>
+  <% }else{ %>
+    <p><%= post.content %></p>
+  <% } %>
+  <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
+<% }) %>
+<h3>Followed users</h3>
+<% user.followings.forEach(name=>{ %>
+  <p>Username: <%= name %></p>
+  <a href="/users/<%= name %>" class='btn btn-primary'>View this user</a>
 <% }) %>
 <%- include('partials/footer') %>

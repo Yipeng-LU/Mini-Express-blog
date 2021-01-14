@@ -2,9 +2,11 @@
 <h1>Create a post</h1>
 <form class="" action="/posts" method="post">
   <label>Title</label>
-  <input class='form-control' type="text" name="title" value='<%= title %>'>
+  <input class='form-control' type="text" name="title" value='<%= title %>' required>
   <label>Content</label>
-  <textarea class='form-control' name="content" rows="8" cols="80"><%= content %></textarea>
+  <textarea class='form-control' name="content" rows="8" cols="80" required><%= content %></textarea>
+  <label>City</label>
+  <input type="text" name="city" value='<%= city %>' required>
   <button class='btn btn-primary' type="submit" name="button">Create</button>
 </form>
 <%- include('partials/footer') %>

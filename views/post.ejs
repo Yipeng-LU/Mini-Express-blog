@@ -1,6 +1,18 @@
 <%- include('partials/header') %>
 <h1><%= post.title %></h1>
+<form class="" action="/posts/<%= post.id %>/star" method="post">
+  <button type="submit" class='btn btn-primary'>
+    <% if (!starStatus){ %>
+      Star this post
+    <% }else{ %>
+      Unstar this post
+    <% } %>
+  </button>
+</form>
 <p>Author: <%= post.author %></p>
+<p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
+<p>Star count: <%= post.starCount %></p>
+<p>From: <%= post.city %> <%= post.temperature %>°C <%= post.weather %></p>
 <p><%= post.content %></p>
 <h3>Comments</h3>
 <form class="" action="/posts/<%= post._id %>/comments" method="post">
@@ -11,6 +23,5 @@
   <p><%= comment.content %></p>
   <p>Username: <%= comment.author %></p>
   <p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
-  <p>Likes count: <%= comment.likesCount %></p>
 <% }) %>
 <%- include('partials/footer') %>
