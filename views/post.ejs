@@ -1,6 +1,6 @@
 <%- include('partials/header') %>
 <h1><%= post.title %></h1>
-<form class="" action="/posts/<%= post.id %>/star" method="post">
+<form class="" action="/posts/<%= post.id %>?_method=PUT" method="post">
   <button type="submit" class='btn btn-primary'>
     <% if (!starStatus){ %>
       Star this post

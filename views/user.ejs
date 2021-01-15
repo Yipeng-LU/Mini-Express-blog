@@ -1,8 +1,8 @@
 <%- include('partials/header') %>
 <%- include('partials/footer') %>
 <h1><%= user.username %>'s home page</h1>
-<form class="" action='/users/<%= user.username %>/follow' method="post">
-  <button type="submit" class='btn btn-primary'>
+<form class="" action='/users/<%= user.username %>?_method=PUT' method="post">
+  <button type="submit" class='btn btn-primary' name='btn' value='follow'>
     <% if(!followStatus){ %>
       follow this user
     <% }else{ %>
