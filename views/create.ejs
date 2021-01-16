@@ -1,12 +1,33 @@
 <%- include('partials/header') %>
 <h1>Create a post</h1>
-<form class="" action="/posts" method="post">
-  <label>Title</label>
-  <input class='form-control' type="text" name="title" value='<%= title %>' required>
-  <label>Content</label>
-  <textarea class='form-control' name="content" rows="8" cols="80" required><%= content %></textarea>
-  <label>City</label>
-  <input type="text" name="city" value='<%= city %>' required>
-  <button class='btn btn-primary' type="submit" name="button">Create</button>
-</form>
+<div class="login-container">
+  <form class="" action="/posts" method="post">
+    <div class="row form-row">
+      <div class="col-2">
+        <label>Title</label>
+      </div>
+      <div class="col-10">
+        <input class='form-control' type="text" name="title" value='<%= title %>' required>
+      </div>
+    </div>
+    <div class="row form-row">
+      <div class="col-2">
+        <label>City</label>
+      </div>
+      <div class="col-10">
+        <input class='form-control' type="text" name="city" value='<%= city %>' required>
+      </div>
+    </div>
+    <div class="row form-row">
+      <div class="col-2">
+        <label>Content</label>
+      </div>
+    </div>
+    <div class="form-row">
+      <textarea class='form-control' name="content" rows="8" cols="80" required><%= content %></textarea>
+    </div>
+    <button class='btn btn-primary btn-right-create btn-lg' type="submit" name="button">Create</button>
+  </form>
+</div>
+
 <%- include('partials/footer') %>

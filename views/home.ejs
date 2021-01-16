@@ -1,42 +1,117 @@
 <%- include('partials/header') %>
-<h1>Welcome, <%= user.username %></h1>
-<a class='btn btn-primary' href="/logout">Log out</a>
-<h3>My introduction: </h3>
+<h1>Welcome, <%= user.username %>!</h1>
+<a class='btn btn-warning center-btn btn-lg' href="/logout">Log out</a>
+<h3>My introduction</h3>
 <p><%= user.intro %></p>
-<a href='/users/<%= user.username %>/edit' class='btn btn-primary'>Edit</a>
+<a href='/users/<%= user.username %>/edit' class='btn btn-primary'>Edit my intro</a>
 <h3>My posts</h3>
-<% user.posts.forEach(post=>{ %>
-  <p>Title: <%= post.title %></p>
-  <p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
-  <% if(post.content.length>100){ %>
-    <p><%= post.content.slice(0,100) %>......</p>
-  <% }else{ %>
-    <p><%= post.content %></p>
-  <% } %>
-  <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
-<% }) %>
+<div class="row">
+  <% user.posts.forEach(post=>{ %>
+    <div class="col-4 post-card">
+      <div class="row">
+        <div class="col-4">
+          <p>Title:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.title %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p>Published at:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.publishDate.toLocaleDateString() %></p>
+        </div>
+      </div>
+      <% if(post.content.length>40){ %>
+        <p><%= post.content.slice(0,40) %>......</p>
+      <% }else{ %>
+        <p><%= post.content %></p>
+      <% } %>
+      <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
+    </div>
+  <% }) %>
+</div>
 <h3>My comments</h3>
 <% user.comments.forEach(comment=>{ %>
-  <p><%= comment.content %></p>
-  <p>Post title: <%= comment.postTitle %></p>
-  <p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
-  <a href="/posts/<%= comment.postId %>" class='btn btn-primary'>Go to the post</a>
+  <div class="comment-card">
+    <p ><%= comment.content %></p>
+    <div class="row">
+      <div class="col-1">
+        <p>Post title:</p>
+      </div>
+      <div class="col-10">
+        <span><%= comment.postTitle %></span>
+        <a href="/posts/<%= comment.postId %>" class='btn btn-info btn-sm'>Go to the post</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1">
+        <p>Publish at:</p>
+      </div>
+      <div class="col-10">
+        <p><%= comment.publishDate.toLocaleDateString() %></p>
+      </div>
+    </div>
+
+  </div>
 <% }) %>
 <h3>My stared posts</h3>
-<% user.favouritePosts.forEach(post=>{ %>
-  <p>Title: <%= post.title %></p>
-  <p>Author: <%= post.author %></p>
-  <p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
-  <% if(post.content.length>100){ %>
-    <p><%= post.content.slice(0,100) %>......</p>
-  <% }else{ %>
-    <p><%= post.content %></p>
-  <% } %>
-  <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
-<% }) %>
+<div class="row">
+  <% user.favouritePosts.forEach(post=>{ %>
+    <div class="col-4 post-card">
+      <div class="row">
+        <div class="col-4">
+          <p>Title:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.title %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p>Author:</p>
+        </div>
+        <div class="col-8">
+          <div class="">
+            <span><%= post.author %></span>
+            <a class='btn btn-info btn-sm' href='/users/<%= post.author %>'>View author</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p>Published at:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.publishDate.toLocaleDateString() %></p>
+        </div>
+      </div>
+      <% if(post.content.length>40){ %>
+        <p><%= post.content.slice(0,40) %>......</p>
+      <% }else{ %>
+        <p><%= post.content %></p>
+      <% } %>
+      <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
+    </div>
+  <% }) %>
+</div>
 <h3>Followed users</h3>
-<% user.followings.forEach(name=>{ %>
-  <p>Username: <%= name %></p>
-  <a href="/users/<%= name %>" class='btn btn-primary'>View this user</a>
-<% }) %>
+<div class="row">
+  <% user.followings.forEach(name=>{ %>
+    <div class="col-4 post-card">
+      <div class="row">
+        <div class="col-4">
+          <p>Username:</p>
+        </div>
+        <div class="col-8">
+          <p><%= name %></p>
+        </div>
+      </div>
+      <a href="/users/<%= name %>" class='btn btn-primary'>View user</a>
+    </div>
+  <% }) %>
+</div>
+
 <%- include('partials/footer') %>

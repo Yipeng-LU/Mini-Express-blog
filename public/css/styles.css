@@ -1,0 +1,68 @@
+.custom-body h1{
+  text-align: center;
+  margin:50px;
+  font-weight:normal;
+}
+.custom-body h3{
+  margin-top:50px;
+}
+body{
+  background-color: #eff7e1;
+}
+.intro-text{
+  max-width:70%;
+  margin:auto;
+  line-height: 3;
+}
+.navbar-brand{
+  font-size: 40px;
+  font-weight: bolder;
+  margin-left:100px;
+}
+.customBar{
+  margin-left: auto;
+  margin-right: 100px;
+}
+.nav-item{
+  margin-left: 30px;
+}
+.btn-login{
+  width:100px;
+}
+.inline-label{
+  margin:auto;
+  text-align: center;
+}
+.login-container{
+  width:50%;
+  margin:auto;
+}
+.form-row{
+  margin:10px 0;
+}
+.btn-right{
+  margin-left: 83%;
+}
+.txt-right{
+  text-align: right;
+  margin:20px 10px 10px 0;
+}
+.post-card{
+  border:3px dotted white;
+  padding:10px;
+  text-align: center;
+}
+.message{
+  text-align: center;
+  margin:0;
+}
+.center-btn{
+  margin-left:45%;
+}
+.comment-card{
+  border:3px dotted white;
+  padding:10px;
+}
+.btn-right-create{
+  margin-left:85%;
+}

@@ -3,9 +3,9 @@
 <form class="" action="/posts/<%= post.id %>?_method=PUT" method="post">
   <button type="submit" class='btn btn-primary'>
     <% if (!starStatus){ %>
-      Star this post
+    Star this post
     <% }else{ %>
-      Unstar this post
+    Unstar this post
     <% } %>
   </button>
 </form>
@@ -20,8 +20,8 @@
   <button type="submit" class='btn btn-primary'>Submit</button>
 </form>
 <% post.comments.forEach(comment=>{ %>
-  <p><%= comment.content %></p>
-  <p>Username: <%= comment.author %></p>
-  <p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
+<p><%= comment.content %></p>
+<p>Username: <%= comment.author %></p>
+<p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
 <% }) %>
 <%- include('partials/footer') %>

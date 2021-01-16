@@ -1,12 +1,12 @@
 <% if (typeof successMsg!=='undefined'&&successMsg.length!==0) {%>
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
+  <div class="alert alert-success alert-dismissible fade show message" role="alert">
     <h3><%= successMsg %></h3>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 <% } %>
 <% if (typeof errorMsg!=='undefined' && errorMsg.length!==0) {%>
   <% errorMsg.forEach(function(msg){ %>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <div class="alert alert-warning alert-dismissible fade show message" role="alert">
       <h3><%= msg %></h3>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>

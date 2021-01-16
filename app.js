@@ -15,7 +15,7 @@ const methodOverride=require('method-override')
 app.set('view engine','ejs');
 app.use(flash());
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 app.use(session({
   secret: process.env.SECRET,
   resave: false,
@@ -70,6 +70,9 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 app.get('/',function(req,res){
+  if (req.isAuthenticated()){
+    return res.redirect('/home');
+  }
   res.render('index');
 });
 app.route('/register')
@@ -82,14 +85,14 @@ app.route('/register')
   const password2=req.body.password2;
   messages=[];
   if (password!==password2){
-    messages.push('passwords do not match')
+    messages.push('passwords do not match!')
   }
   if (password.length<8){
-    messages.push('passwords is too short')
+    messages.push('passwords is too short!')
   }
   const isExist=await User.findOne({username:username});
   if (isExist){
-    messages.push('Username already exists')
+    messages.push('Username already exists!')
   }
   if (messages.length!==0){
     req.flash('errorMsg',messages)
@@ -99,7 +102,7 @@ app.route('/register')
   }
   User.register({username:username},password,function(err,user){
     passport.authenticate('local')(req,res,function(){
-      req.flash('successMsg','You have successfully registered')
+      req.flash('successMsg','You have successfully registered!')
       res.redirect('/home')
     })
   })
@@ -113,13 +116,13 @@ app.route('/login')
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
     if (!user) {
-      req.flash('errorMsg',['username or password is incorrect'])
+      req.flash('errorMsg',['username or password is incorrect!'])
       req.flash('username',req.body.username);
       return res.redirect('/login');
      }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      req.flash('successMsg','You have successfully logged in')
+      req.flash('successMsg','You have successfully logged in!')
       return res.redirect('/home');
     });
   })(req, res, next);
@@ -129,7 +132,7 @@ app.get('/home',async function(req,res){
     const user=await User.findById(req.user._id).exec();
     res.render('home',{user:user,successMsg:req.flash('successMsg'),errorMsg:req.flash('errorMsg')})
   }else{
-    req.flash('errorMsg',['Please log in to view your homepage'])
+    req.flash('errorMsg',['Please log in to view your homepage!'])
     res.redirect('/login')
   }
 })
@@ -273,11 +276,11 @@ app.route('/users/:username')
     if (myself.followings.includes(username)){
       myself.followings=myself.followings.filter(f=>f!==username);
       user.followerCount-=1;
-      req.flash('successMsg','You have successfully unfollowed this user');
+      req.flash('successMsg','You have successfully unfollowed this user!');
     }else{
       myself.followings.push(username);
       user.followerCount+=1;
-      req.flash('successMsg','You have successfully followed this user');
+      req.flash('successMsg','You have successfully followed this user!');
     }
     myself.save();
     user.save();

@@ -1,12 +1,27 @@
 <%- include('partials/header') %>
 <h1>Login</h1>
-<form class="" action="/login" method="post">
-  <label for="">Username: </label>
-  <input class='form-control' type="text" name="username" value='<%= username %>' required>
-  <label for="">Password</label>
-  <input class='form-control' type="password" name="password" required>
-  <button class='btn btn-primary' type="submit">Log in</button>
-</form>
-<p>Do not have an account yet? Register now!</p>
-<a class='btn btn-primary' href="/register">Register</a>
+<div class="login-container">
+  <form action="/login" method="post">
+    <div class="row form-row">
+      <div class="col-2 inline-label">
+        <label>Username: </label>
+      </div>
+      <div class="col-10">
+        <input class='form-control' type="text" name="username" value='<%= username %>' required>
+      </div>
+    </div>
+    <div class="row form-row">
+      <div class="col-2 inline-label">
+        <label for="">Password:</label>
+      </div>
+      <div class="col-10">
+        <input class='form-control' type="password" name="password" required>
+      </div>
+    </div>
+    <button class='btn btn-primary btn-right btn-login' type="submit">Log in</button>
+    <p class='txt-right'>Do not have an account yet? Register now!</p>
+    <a class='btn btn-info btn-right btn-login' href="/register">Register</a>
+  </form>
+</div>
+
 <%- include('partials/footer') %>

@@ -1,14 +1,37 @@
 <%- include('partials/header') %>
 <h1>Register</h1>
-<form class="" action="/register" method="post">
-  <label for="">Username: </label>
-  <input class='form-control' type="text" name="username" required value='<%= username %>'>
-  <label for="">Password</label>
-  <input class='form-control' type="password" name="password" required>
-  <label for="">Insert your password again</label>
-  <input class='form-control' type="password" name="password2" required>
-  <button class='btn btn-primary' type="submit">Register</button>
-</form>
-<p>Already have an account? Log in now!</p>
-<a class='btn btn-primary' href="/login">Log in</a>
+<div class="login-container">
+
+  <form class="" action="/register" method="post">
+    <div class="row form-row">
+      <div class="col-4 inline-label">
+        <label for="">Username</label>
+      </div>
+      <div class="col-8">
+        <input class='form-control' type="text" name="username" required value='<%= username %>'>
+      </div>
+    </div>
+    <div class="row form-row">
+      <div class="col-4 inline-label">
+        <label for="">Password</label>
+      </div>
+      <div class="col-8">
+        <input class='form-control' type="password" name="password" required>
+      </div>
+    </div>
+    <div class="row form-row">
+      <div class="col-4 inline-label">
+        <label for="">Comfirm password</label>
+      </div>
+      <div class="col-8">
+        <input class='form-control' type="password" name="password2" required>
+      </div>
+    </div>
+    <button class='btn btn-info btn-right btn-login' type="submit">Register</button>
+    <p class='txt-right'>Already have an account? Log in now!</p>
+    <a class='btn btn-primary btn-right btn-login' href="/login">Log in</a>
+  </form>
+</div>
+
+
 <%- include('partials/footer') %>

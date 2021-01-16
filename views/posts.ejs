@@ -1,16 +1,51 @@
 <%- include('partials/header') %>
 <h1>All posts</h1>
-<% posts.forEach(post=>{ %>
-  <p>Title: <%= post.title %></p>
-  <p>Author: <%= post.author %></p>
-  <p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
-  <p>Star count: <%= post.starCount %></p>
-  <a class='btn btn-primary' href='/users/<%= post.author %>'>View the author</a>
-  <% if(post.content.length>100){ %>
-    <p><%= post.content.slice(0,100) %>......</p>
-  <% }else{ %>
-    <p><%= post.content %></p>
-  <% } %>
-  <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
-<% }) %>
+<div class="row">
+  <% posts.forEach(post=>{ %>
+    <div class="col-4 post-card">
+      <div class="row">
+        <div class="col-4">
+          <p>Title:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.title %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p>Author:</p>
+        </div>
+        <div class="col-8">
+          <div class="">
+            <span><%= post.author %></span>
+            <a class='btn btn-info btn-sm' href='/users/<%= post.author %>'>View author</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p>Published at:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.publishDate.toLocaleDateString() %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p>Star count:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.starCount %></p>
+        </div>
+      </div>
+      <% if(post.content.length>40){ %>
+        <p><%= post.content.slice(0,40) %>......</p>
+      <% }else{ %>
+        <p><%= post.content %></p>
+      <% } %>
+      <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
+    </div>
+  <% }) %>
+</div>
+
 <%- include('partials/footer') %>

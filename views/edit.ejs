@@ -1,11 +1,11 @@
 <%- include('partials/header') %>
 <h1>Edit introduction</h1>
 <form class="" action="/users/<%= user.username %>?_method=PUT" method="post">
-<% if (errorMsg.length===0){ %>
-  <textarea name="intro" rows="8" cols="80" class='form-control' required><%= user.intro %></textarea>
-<% }else{ %>
-  <textarea name="intro" rows="8" cols="80" class='form-control' required><%= intro %></textarea>
-<% } %>
-  <button type="submit" class='btn btn-primary' name='btn' value='intro'>Submit</button>
+  <% if (errorMsg.length===0){ %>
+    <textarea name="intro" rows="8" cols="80" class='form-control' required><%= user.intro %></textarea>
+  <% }else{ %>
+    <textarea name="intro" rows="8" cols="80" class='form-control' required><%= intro %></textarea>
+  <% } %>
+    <button type="submit" class='btn btn-primary' name='btn' value='intro'>Submit</button>
 </form>
 <%- include('partials/footer') %>
