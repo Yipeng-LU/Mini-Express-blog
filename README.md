@@ -5,3 +5,4 @@ Mini express blog is a simple RESTful web app developed with express for practic
 3. Create post after signed in, get the weather from open weather api once the city field is filled.
 4. Star, unstar posts, follow, unfollow users after signed in.
 5. Edit user intro once signed in
+6. Make comments on posts once signed in
