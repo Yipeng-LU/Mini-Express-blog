@@ -1,5 +1,5 @@
 //jshint esversion:6
-// require('dotenv').config()
+require('dotenv').config()
 const express=require('express');
 const bodyParser=require('body-parser');
 const ejs=require('ejs');
@@ -28,7 +28,6 @@ app.use(passport.session());
 app.use(methodOverride('_method'))
 
 mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true,useUnifiedTopology: true});
-console.log(process.env.DATABASE_URL);
 mongoose.set('useCreateIndex', true);
 
 const User=require('./models/user');
