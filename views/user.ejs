@@ -1,8 +1,7 @@
 <%- include('partials/header') %>
-<%- include('partials/footer') %>
 <h1><%= user.username %>'s home page</h1>
 <form class="" action='/users/<%= user.username %>?_method=PUT' method="post">
-  <button type="submit" class='btn btn-primary' name='btn' value='follow'>
+  <button type="submit" class='btn btn-primary btn-lg center-btn' name='btn' value='follow'>
     <% if(!followStatus){ %>
     follow this user
     <% }else{ %>
@@ -10,22 +9,65 @@
     <% } %>
   </button>
 </form>
-<p>Follower count: <%= user.followerCount %></p>
+<div class="row info-container">
+  <div class="col">
+    <p>Follower count:</p>
+  </div>
+  <div class="col">
+    <p><%= user.followerCount %></p>
+  </div>
+</div>
 <h3><%= user.username %>'s posts</h3>
-<% user.posts.forEach(post=>{ %>
-<p>Title: <%= post.title %></p>
-<p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
-<% if(post.content.length>100){ %>
-<p><%= post.content.slice(0,100) %>......</p>
-<% }else{ %>
-<p><%= post.content %></p>
-<% } %>
-<a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
-<% }) %>
+
+<div class="row">
+  <% user.posts.forEach(post=>{ %>
+    <div class="col-4 post-card">
+      <div class="row">
+        <div class="col-4">
+          <p>Title:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.title %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <p>Published at:</p>
+        </div>
+        <div class="col-8">
+          <p><%= post.publishDate.toLocaleDateString() %></p>
+        </div>
+      </div>
+      <% if(post.content.length>40){ %>
+        <p><%= post.content.slice(0,40) %>......</p>
+      <% }else{ %>
+        <p><%= post.content %></p>
+      <% } %>
+      <a class='btn btn-primary' href="/posts/<%= post._id %>">View details</a>
+    </div>
+  <% }) %>
+</div>
 <h3><%= user.username %>'s comments</h3>
 <% user.comments.forEach(comment=>{ %>
-<p><%= comment.content %></p>
-<p>Post title: <%= comment.postTitle %></p>
-<p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
-<a href="/posts/<%= comment.postId %>" class='btn btn-primary'>Go to the post</a>
+  <div class="comment-card">
+    <p ><%= comment.content %></p>
+    <div class="row">
+      <div class="col-1">
+        <p>Post title:</p>
+      </div>
+      <div class="col-10">
+        <span><%= comment.postTitle %></span>
+        <a href="/posts/<%= comment.postId %>" class='btn btn-info btn-sm'>Go to the post</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1">
+        <p>Publish at:</p>
+      </div>
+      <div class="col-10">
+        <p><%= comment.publishDate.toLocaleDateString() %></p>
+      </div>
+    </div>
+  </div>
 <% }) %>
+<%- include('partials/footer') %>

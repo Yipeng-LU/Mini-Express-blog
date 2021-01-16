@@ -5,6 +5,7 @@
 }
 .custom-body h3{
   margin-top:50px;
+  margin-bottom: 20px;
 }
 body{
   background-color: #eff7e1;
@@ -57,7 +58,9 @@ body{
   margin:0;
 }
 .center-btn{
-  margin-left:45%;
+  width:16%;
+  margin-left:42%;
+  margin-bottom:50px;
 }
 .comment-card{
   border:3px dotted white;
@@ -65,4 +68,22 @@ body{
 }
 .btn-right-create{
   margin-left:85%;
+}
+.post-content{
+  margin:50px auto;
+  line-height: 2;
+}
+.info-container{
+  width:40%;
+  margin:auto;
+  text-align:center;
+}
+.comment-area{
+  margin:10px 0;
+}
+span{
+  margin-right: 10px;
+}
+.footer{
+  margin-top:30px;
 }

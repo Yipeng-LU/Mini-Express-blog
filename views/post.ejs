@@ -1,7 +1,7 @@
 <%- include('partials/header') %>
 <h1><%= post.title %></h1>
 <form class="" action="/posts/<%= post.id %>?_method=PUT" method="post">
-  <button type="submit" class='btn btn-primary'>
+  <button type="submit" class='btn btn-primary btn-lg center-btn'>
     <% if (!starStatus){ %>
     Star this post
     <% }else{ %>
@@ -9,19 +9,69 @@
     <% } %>
   </button>
 </form>
-<p>Author: <%= post.author %></p>
-<p>Published at: <%= post.publishDate.toLocaleDateString() %></p>
-<p>Star count: <%= post.starCount %></p>
-<p>From: <%= post.city %> <%= post.temperature %>°C <%= post.weather %></p>
-<p><%= post.content %></p>
-<h3>Comments</h3>
+<div class='info-container'>
+  <div class='row'>
+    <div class='col'>
+      <p>Author:</p>
+    </div>
+    <div class='col'>
+      <p><%= post.author %></p>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <p>Published at:</p>
+    </div>
+    <div class='col'>
+      <p><%= post.publishDate.toLocaleDateString() %></p>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <p>Star count:</p>
+    </div>
+    <div class='col'>
+      <p><%= post.starCount %></p>
+    </div>
+  </div>
+  <div class='row'>
+    <div class='col'>
+      <p>From:</p>
+    </div>
+    <div class='col'>
+      <p><%= post.city %> <%= post.temperature %>°C <%= post.weather %></p>
+    </div>
+  </div>
+</div>
+<p class='post-content'><%= post.content %></p>
 <form class="" action="/posts/<%= post._id %>/comments" method="post">
-  <textarea class='form-control' name="content" rows="8" cols="80" placeholder="Please insert your comment here" required><%= commentValue %></textarea>
+  <textarea class='form-control comment-area' name="content" rows="2" cols="80" placeholder="Please insert your comment here" required><%= commentValue %></textarea>
   <button type="submit" class='btn btn-primary'>Submit</button>
 </form>
+<% if (post.comments.length!==0){ %>
+  <h3>Comments</h3>
+<% } %>
+
 <% post.comments.forEach(comment=>{ %>
-<p><%= comment.content %></p>
-<p>Username: <%= comment.author %></p>
-<p>Publish at: <%= comment.publishDate.toLocaleDateString() %></p>
+  <div class="comment-card">
+    <p ><%= comment.content %></p>
+    <div class="row">
+      <div class="col-1">
+        <p>Username:</p>
+      </div>
+      <div class="col-10">
+        <p><%= comment.author %></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1">
+        <p>Publish at:</p>
+      </div>
+      <div class="col-10">
+        <p><%= comment.publishDate.toLocaleDateString() %></p>
+      </div>
+    </div>
+
+  </div>
 <% }) %>
 <%- include('partials/footer') %>

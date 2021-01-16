@@ -348,6 +348,10 @@ app.get('/users/:username/edit',async function(req,res){
   };
   const username=req.params.username;
   const user=await User.findOne({username:username});
+  if (!user){
+    req.flash('errorMsg','Cannot find the user!');
+    return res.redirect('/home')
+  }
   if (user._id!=req.user._id){
     req.flash('errorMsg',['You are not allowed to edit others introduction!']);
     return res.redirect('/home');
