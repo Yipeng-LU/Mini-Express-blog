@@ -17,8 +17,9 @@
     <p><%= user.followerCount %></p>
   </div>
 </div>
+<h3><%= user.username %>'s introduction</h3>
+<p><%= user.intro %></p>
 <h3><%= user.username %>'s posts</h3>
-
 <div class="row">
   <% user.posts.forEach(post=>{ %>
     <div class="col-4 post-card">
